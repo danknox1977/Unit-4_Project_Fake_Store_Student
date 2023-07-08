@@ -1,30 +1,34 @@
 //Global Variables
-const navBarCart = document.getElementsByClassName("navBarCart");
+const navBarCart = document.getElementById("navBarCart");
 
-const navBarElectro = document.getElementsByClassName("navBarElectro");
+const navBarElectro = document.getElementById("navBarElectro");
 
-const navBarJewelz = document.getElementsByClassName("navBarJewelz");
+const navBarJewelz = document.getElementById("navBarJewelz");
 
-const navBarMenz = document.getElementsByClassName("navBarMenz");
+const navBarMenz = document.getElementById("navBarMenz");
 
-const navBarWomenz = document.getElementsByClassName("navBarWomenz");
+const navBarWomenz = document.getElementById("navBarWomenz");
 
 const display = document.getElementById("display");
 
 const baseURL = "https://fakestoreapi.com";
 
 //Async fakeStore
-async function fakeStore(endpoint) {
+const fakeStore = async endpoint => {
+
   await fetch(baseURL + endpoint)
   .then(res=>res.json())
   .then(json=>console.log(json))
-    .catch((err) => console.error(err));
+  .catch((err) => console.error(err));
+  console.log(endpoint)
 }
 
-fakeStore("/products/1");
+// fakeStore("/products/1");
 
-window.onload = fakeStore("/products/1"){myScript};
 
+
+
+// {myScript}
 // **On Load:**
 // - **Given** the user loads the page.
 // - **Then** target the window object.
@@ -37,6 +41,19 @@ window.onload = fakeStore("/products/1"){myScript};
 // - **And** for each callback function, invoke the `fakeStore` function.
 // - **And** pass in the associated endpoint to that will return that categories inventory.
 
+// navBarCart.addEventListener('onclick', (e) => {
+//   console.log('cart')
+// })
+
+navBarElectro.addEventListener('onclick', fakeStore('/products/category/electronics?limit=5'));
+
+navBarJewelz.addEventListener('onclick', fakeStore('/products/category/jewelery?limit=5'));
+
+navBarMenz.addEventListener('onclick', fakeStore('/products/category/men\'s\ clothing?limit=5'));
+
+navBarWomenz.addEventListener('onclick', fakeStore('/products/category/women\'s\ clothing?limit=5'));
+
+
 // **Notes:**
 // - Be sure to look over the documentation as to how you are to pull data in different manners.
 //   - Descending, ascending, item, category, etc.
@@ -48,3 +65,5 @@ window.onload = fakeStore("/products/1"){myScript};
 // - The window onload should provide an endpoint that returns **all** data from the API in ascending order.
 //   - This should be set to the very bottom of the file.
 // - At this point, all data should be at least displayed within the `console`.
+
+window.onload = fakeStore("/products?sort=asc");
