@@ -13,57 +13,177 @@ const display = document.getElementById("display");
 
 const baseURL = "https://fakestoreapi.com";
 
+let products = [];
+
+let cart = [];
+
+// -------------------------------------Functions------------------------------------------------- //
 //Async fakeStore
-const fakeStore = async endpoint => {
-
+const fakeStore = async (endpoint) => {
   await fetch(baseURL + endpoint)
-  .then(res=>res.json())
-  .then(json=>console.log(json))
-  .catch((err) => console.error(err));
-  console.log(endpoint)
-}
+    .then((res) => res.json())
 
-// fakeStore("/products/1");
+    // .then(json=>console.log(json))
+    .then((data) => {
+      let item = data; //pathway to an item from the API.
+      products = item;
+      console.log(item);
 
+      displayCards();
+    })
+    .catch((err) => console.error(err));
+};
 
+const removeElements = (element) => {
+  while (element.firstChild) {
+    element.removeChild(element.firstChild);
+  }
+};
 
+const displayCards = (obj) => {
+  console.log("displayCardsFired");
+  removeElements(display);
+  products.map((obj) => {
+    //* Create
+    let col = document.createElement("div"); //col
+    let card = document.createElement("div"); //card
+    let img = document.createElement("img"); //img
+    let body = document.createElement("div"); //body
+    let title = document.createElement("h5"); //title
+    let accordion = document.createElement("div"); //accordion start
+    let accItem1 = document.createElement("div"); //accordion item
+    let accHead1 = document.createElement("h2"); //accordion header
+    let accBtn1 = document.createElement("button"); //accordion-button collapsed
+    let accClpsdTxt1 = document.createElement("div"); //flush-collapseOne
+    let accClpsdBody1 = document.createElement("div"); //text
+    let accItem2 = document.createElement("div"); //accordion item
+    let accHead2 = document.createElement("h2"); //accordion header
+    let accBtn2 = document.createElement("button"); //accordion-button collapsed
+    let accClpsdTxt2 = document.createElement("div"); //flush-collapseOne
+    let accClpsdBody2 = document.createElement("div"); //text
+    let cartBtn = document.createElement("button"); //add to cart function
 
-// {myScript}
-// **On Load:**
-// - **Given** the user loads the page.
-// - **Then** target the window object.
-// - **And** use an `onload` method that will invoke the `fakeStore` function.
-// - **And** provide an argument that will be the endpoint for the URL fetch.
+    //* Attributes
+    col.className = "col";
+    
+    col.style.width = "18rem";
 
-// **Event Listeners:**
-// - **Given** the page has loaded with data being returned.
-// - **Then** create event listeners using the proper method for each global variable assigned to each navbar category.
-// - **And** for each callback function, invoke the `fakeStore` function.
-// - **And** pass in the associated endpoint to that will return that categories inventory.
+    card.className = "card";
+    card.style.maxHeight = "36rem";
+    card.style.background = "dark blue"
 
-// navBarCart.addEventListener('onclick', (e) => {
-//   console.log('cart')
-// })
+    img.className = "card-img-top";
+    img.src = obj.image; //src from an object from array
+    img.alt = `Picture of: ${obj.title}`; // src from an object from array
 
-navBarElectro.addEventListener('onclick', fakeStore('/products/category/electronics?limit=5'));
+    body.className = "card-body";
 
-navBarJewelz.addEventListener('onclick', fakeStore('/products/category/jewelery?limit=5'));
+    title.className = "card-title";
+    title.textContent = obj.title; // from object
 
-navBarMenz.addEventListener('onclick', fakeStore('/products/category/men\'s\ clothing?limit=5'));
+    accordion.className = "accordion accordion-flush";
+    accordion.setAttribute("id", `accDesc${obj.id}`);
 
-navBarWomenz.addEventListener('onclick', fakeStore('/products/category/women\'s\ clothing?limit=5'));
+    accItem1.className = "accordion-item";
+    accItem2.className = "accordion-item";
 
+    accHead1.className = "accordion-header";
+    accHead2.className = "accordion-header";
 
-// **Notes:**
-// - Be sure to look over the documentation as to how you are to pull data in different manners.
-//   - Descending, ascending, item, category, etc.
-// - Consider Scope and Hoisting when writing various aspects of your code, such as event listeners.
+    accBtn1.className = "accordion-button collapsed";
+    accBtn1.type = "button";
+    accBtn1.setAttribute("data-bs-toggle", "collapse");
+    accBtn1.setAttribute("data-bs-target", `#flush-collapseOne${obj.id}`);
+    accBtn1.setAttribute("aria-expanded", "false");
+    accBtn1.setAttribute("aria-controls", `flush-collapseOne${obj.id}`);
+    accBtn1.textContent = "Description";
 
-// **Ticket Requirements:**
-// - gloabl variables should not have the capability to change later in the code.
-// - The `fakeStore()` function should be written as a block body arrow function.
-// - The window onload should provide an endpoint that returns **all** data from the API in ascending order.
-//   - This should be set to the very bottom of the file.
-// - At this point, all data should be at least displayed within the `console`.
+    accBtn2.className = "accordion-button collapsed";
+    accBtn2.type = "button";
+    accBtn2.setAttribute("data-bs-toggle", "collapse");
+    accBtn2.setAttribute("data-bs-target", `#flush-collapseTwo${obj.id}`);
+    accBtn2.setAttribute("aria-expanded", "false");
+    accBtn2.setAttribute("aria-controls", `flush-collapseTwo${obj.id}`);
+    accBtn2.textContent = "Price";
 
-window.onload = fakeStore("/products?sort=asc");
+    accClpsdTxt1.className = "accordion-collapse collapse";
+    accClpsdTxt1.setAttribute("id", `flush-collapseOne${obj.id}`);
+    accClpsdTxt1.setAttribute("data-bs-parent", `#accDesc${obj.id}`);
+
+    accClpsdBody1.textContent = obj.description;
+    accClpsdBody1.className = "card-text";
+
+    accClpsdTxt2.className = "accordion-collapse collapse";
+    accClpsdTxt2.setAttribute("id", `flush-collapseTwo${obj.id}`);
+    accClpsdTxt2.setAttribute("data-bs-parent", `#accDesc${obj.id}`);
+
+    accClpsdBody2.textContent = `$${obj.price.toFixed(2)}`;
+    accClpsdBody2.className = "card-text";
+
+    cartBtn.className = "btn btn-primary";
+    cartBtn.textContent = "Add to Cart";
+    cartBtn.onclick = () => {
+      console.log(`Added ${obj} to ${cart}`);
+      let cartItem = {
+        id: obj.id,
+        title: obj.title,
+        cost: obj.price,
+        quantity: 1,
+      };
+      submitToCart(cartItem);
+    };
+    //* Attach
+    accHead1.appendChild(accBtn1);
+    accHead2.appendChild(accBtn2);
+    accClpsdTxt1.appendChild(accClpsdBody1);
+    accClpsdTxt2.appendChild(accClpsdBody2);
+    accClpsdTxt2.appendChild(cartBtn);
+    accItem1.appendChild(accHead1);
+    accItem1.appendChild(accClpsdTxt1);
+    accItem2.appendChild(accHead2);
+    accItem2.appendChild(accClpsdTxt2);
+    accordion.appendChild(accItem1);
+    accordion.appendChild(accItem2);
+    body.appendChild(title);
+    // body.appendChild(p);
+
+    col.appendChild(card);
+    col.appendChild(img);
+    col.appendChild(body);
+    col.appendChild(accordion);
+
+    display.appendChild(col);
+  });
+};
+
+function submitToCart(item) {
+  cart.push(item);
+  console.log(cart)
+};
+
+navBarCart.addEventListener('submit', (event) => {
+  event.preventDefault()
+  console.log(cart)
+});
+
+navBarElectro.addEventListener("click", (event) => {
+  products = [];
+  fakeStore("/products/category/electronics?limit=5");
+});
+
+navBarJewelz.addEventListener("click", (event) => {
+  products = [];
+  fakeStore("/products/category/jewelery?limit=5");
+});
+
+navBarMenz.addEventListener("click", (event) => {
+  products = [];
+  fakeStore("/products/category/men's clothing?limit=5");
+});
+
+navBarWomenz.addEventListener("click", (event) => {
+  products = [];
+  fakeStore("/products/category/women's clothing?limit=5");
+});
+
+window.onload = fakeStore("/products?sort=asc&limit=8");
