@@ -41,7 +41,6 @@ const removeElements = (element) => {
 };
 
 const displayCards = (obj) => {
-  console.log("displayCardsFired");
   removeElements(display);
   products.map((obj) => {
     //* Create
@@ -65,12 +64,11 @@ const displayCards = (obj) => {
 
     //* Attributes
     col.className = "col";
-    
+
     col.style.width = "18rem";
 
     card.className = "card";
     card.style.maxHeight = "36rem";
-    card.style.background = "dark blue"
 
     img.className = "card-img-top";
     img.src = obj.image; //src from an object from array
@@ -123,7 +121,7 @@ const displayCards = (obj) => {
     cartBtn.className = "btn btn-primary";
     cartBtn.textContent = "Add to Cart";
     cartBtn.onclick = () => {
-      console.log(`Added ${obj} to ${cart}`);
+      // console.log(obj.title);
       let cartItem = {
         id: obj.id,
         title: obj.title,
@@ -131,6 +129,7 @@ const displayCards = (obj) => {
         quantity: 1,
       };
       submitToCart(cartItem);
+      
     };
     //* Attach
     accHead1.appendChild(accBtn1);
@@ -157,13 +156,45 @@ const displayCards = (obj) => {
 };
 
 function submitToCart(item) {
-  cart.push(item);
-  console.log(cart)
-};
+  // console.log(cart)
+cart.length > 0 ?
+cart.forEach(object => {
+  if (object.id === item.id) {
+    object.quantity = object.quantity + 1
+  } else {
+    cart.push(item)
+  }
+}): cart.push(item)
+console.log(cart)
 
-navBarCart.addEventListener('submit', (event) => {
-  event.preventDefault()
-  console.log(cart)
+
+  // if (cart.length > 0) {
+  //   cart.forEach((obj) => {
+  //     console.log(obj.id);
+  //     if (obj.id == item.id) {
+  //       obj.quantity = obj.quantity + 1;
+
+  //       console.log("added to quantity");
+  //     } else {
+  //       cart.push(item);
+  //       console.log(`${item.title} added to cart`);
+  //     }
+  //   });
+  //   // // (let i = 0; i < cart.length; i++)
+  //   //  {
+
+  //   //   }
+  // } else {
+  //   cart.push(item);
+  //   console.log(`${item.title} added to cart`);
+  // }
+}
+
+//establish id# from the item
+
+navBarCart.addEventListener("submit", (event) => {
+  event.preventDefault();
+  
 });
 
 navBarElectro.addEventListener("click", (event) => {
