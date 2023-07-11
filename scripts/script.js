@@ -17,6 +17,8 @@ let products = [];
 
 let cart = [];
 
+
+
 // -------------------------------------Functions------------------------------------------------- //
 //Async fakeStore
 const fakeStore = async (endpoint) => {
@@ -68,7 +70,7 @@ const displayCards = (obj) => {
     col.style.width = "18rem";
 
     card.className = "card";
-    card.style.maxHeight = "36rem";
+    // card.style.maxHeight = "36rem";
 
     img.className = "card-img-top";
     img.src = obj.image; //src from an object from array
@@ -129,8 +131,10 @@ const displayCards = (obj) => {
         quantity: 1,
       };
       submitToCart(cartItem);
+      console.log(`attempt to buy ${obj.title}`)
       
     };
+
     //* Attach
     accHead1.appendChild(accBtn1);
     accHead2.appendChild(accBtn2);
@@ -144,8 +148,7 @@ const displayCards = (obj) => {
     accordion.appendChild(accItem1);
     accordion.appendChild(accItem2);
     body.appendChild(title);
-    // body.appendChild(p);
-
+   
     col.appendChild(card);
     col.appendChild(img);
     col.appendChild(body);
@@ -156,41 +159,40 @@ const displayCards = (obj) => {
 };
 
 function submitToCart(item) {
-  // console.log(cart)
-cart.length > 0 ?
-cart.forEach(object => {
-  if (object.id === item.id) {
-    object.quantity = object.quantity + 1
-  } else {
-    cart.push(item)
-  }
-}): cart.push(item)
-console.log(cart)
-
+ 
+// cart.length > 0 ?
+// cart.forEach(object => {
+//   if (object.id === item.id) {
+//     object.quantity = object.quantity + 1
+//   } else {
+//     cart.push(item)
+//   }
+// }): cart.push(item)
+// console.log(cart)
 
   // if (cart.length > 0) {
-  //   cart.forEach((obj) => {
-  //     console.log(obj.id);
-  //     if (obj.id == item.id) {
-  //       obj.quantity = obj.quantity + 1;
+   
+const cartItem = cart.find((cartItem) => cartItem.id === item.id);
+// const found = array1.find(element => element > 10);
 
-  //       console.log("added to quantity");
-  //     } else {
-  //       cart.push(item);
-  //       console.log(`${item.title} added to cart`);
-  //     }
-  //   });
-  //   // // (let i = 0; i < cart.length; i++)
-  //   //  {
+    if (cartItem) {
+      console.log(cartItem.quantity)
+    cartItem.quantity ++;
+    console.log("quantity add")
+    console.log(cart)
 
-  //   //   }
-  // } else {
-  //   cart.push(item);
-  //   console.log(`${item.title} added to cart`);
-  // }
-}
+       
+    } else { 
+    cart.push(item);
+    console.log(`${item.title} added to cart`);
+    console.log(cart)
+    }
+  };
+   
+ 
+// }
 
-//establish id# from the item
+
 
 navBarCart.addEventListener("submit", (event) => {
   event.preventDefault();
