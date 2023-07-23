@@ -27,6 +27,17 @@ footer {
     
 }
 
+.img {
+  width: 100px;
+  float: left;
+  margin: 10px;
+  object-fit: contain;
+}
+
+/* .card {
+  max-height: 10vh;
+} */
+
 
 
 [data-bs-theme="blue"] {

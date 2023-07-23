@@ -43,36 +43,6 @@
 
 <div class="card-group container text-center">
 <div id="display" class="row row-cols-4 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3">
- <!-- <div class="col">
-  <div class="card">
-    <img>
-    <div class="card-body">
-    <h5 class="card-title"></h5>
-  <div class="accordion accordion-flush" id="accordionFlushExample">
-    <div class="accordion-item">
-      <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-          Accordion Item #1
-        </button>
-      </h2>
-      <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the first item's accordion body.</div>
-      </div>
-    </div>
-    <div class="accordion-item">
-      <h2 class="accordion-header">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-          Accordion Item #2
-        </button>
-      </h2>
-      <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the second item's accordion body. Let's imagine this being filled with some actual content.</div>
-      </div>
-    </div>
-  </div>
-  </div>
-  </div>
-</div> -->
   </div>
 </div>
 
@@ -88,7 +58,7 @@
       <div class="modal-body">
         <!--   ! Table  -->
 
-  <table class="table">
+  <table class="table" id="cartTable">
     <thead>
       <tr>
         <th scope="col">Quantity</th>
@@ -96,59 +66,41 @@
         <th scope="col">Price</th>
       </tr>
     </thead>
-    <tbody>
-      <tr>
-        <!-- <th scope="row"></th> -->
-        <td>qty</td>
-        <td>title</td>
-        <td>9.99</td>
-      </tr>
-      <tr>
-        <!-- <th scope="row"></th> -->
-        <td>qty</td>
-        <td>title</td>
-        <td>9.99</td>
-        
-      </tr>
-      <tr>
-        <!-- <th scope="row"></th> -->
-        <td>qty</td>
-        <td>title</td>
-        <td>9.99</td>
-      </tr>
+    <tbody id="cartBody">
     </tbody>
+    
     <thead>
       <tr>
-        <th scope="col">Quantity</th>
-        <th scope="col">Item</th>
-        <th scope="col">Price</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
       </tr>
     </thead>
-    <tfoot>
+   
+    
       <tr>
-        <!-- <th scope="row"></th> -->
         <th scope="row">Subtotal:</th>
-        <td>0</td>
+        <td id="subtotalCost">$0.00</td>
         </tr>
         <tr>
         <th scope="row">Tax:</th>
-        <td>$0.00</td>
+        <td id="taxCost">$0.00</td>
       </tr>
       <tr>
         <th scope="row">Shipping:</th>
-        <td>$0.00</td>
-      </tr>
+        <td id="shipCost">$0.00</td>
+      </tr class="success">
         <tr>
         <th scope="Total">Total:</th>
-        <td>$0.00</td>
+        <td id="totalCost">$0.00</td>
       </tr>
+      <tfoot>
       </tfoot>
   </table>
 
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Understood</button>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-danger" id="clearCart" data-bs-dismiss="modal">Clear Cart</button>
+        <button type="button" class="btn btn-outline-success" id="purchaseBtn">Purchase</button>
       </div>
     </div>
   </div>

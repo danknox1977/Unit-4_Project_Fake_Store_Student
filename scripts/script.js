@@ -1,36 +1,41 @@
 //Global Variables
 const navBarCart = document.getElementById("navBarCart");
-
 const navBarElectro = document.getElementById("navBarElectro");
-
 const navBarJewelz = document.getElementById("navBarJewelz");
-
 const navBarMenz = document.getElementById("navBarMenz");
-
 const navBarWomenz = document.getElementById("navBarWomenz");
-
 const display = document.getElementById("display");
+const cartTable = document.getElementById("cartTable");
+const cartBody = document.getElementById("cartBody");
+const clearCart = document.getElementById("clearCart");
+const purchaseBtn = document.getElementById("purchaseBtn");
+const log = console.log;
 
+// BaseUrl for API
 const baseURL = "https://fakestoreapi.com";
 
+// Empty Arrays for reference
 let products = [];
-
 let cart = [];
 
-
+// Math variables
+const subtotalCost = document.getElementById("subtotalCost");
+const taxCost = document.getElementById("taxCost");
+const shipCost = document.getElementById("shipCost");
+const totalCost = document.getElementById("totalCost");
+var subtotal = 0.0;
+const salesTax = 0.06;
+const shipUpcharge = 0.1;
+var grandTotal = 0.0;
 
 // -------------------------------------Functions------------------------------------------------- //
 //Async fakeStore
 const fakeStore = async (endpoint) => {
   await fetch(baseURL + endpoint)
     .then((res) => res.json())
-
-    // .then(json=>console.log(json))
     .then((data) => {
       let item = data; //pathway to an item from the API.
       products = item;
-      console.log(item);
-
       displayCards();
     })
     .catch((err) => console.error(err));
@@ -63,16 +68,16 @@ const displayCards = (obj) => {
     let accClpsdTxt2 = document.createElement("div"); //flush-collapseOne
     let accClpsdBody2 = document.createElement("div"); //text
     let cartBtn = document.createElement("button"); //add to cart function
+    let cardFoot = document.createElement("div");
+    let cardFootText = document.createElement("small")
 
     //* Attributes
     col.className = "col";
-
     col.style.width = "18rem";
 
-    card.className = "card";
-    // card.style.maxHeight = "36rem";
+    card.className = "card h-5";
 
-    img.className = "card-img-top";
+    img.className = "card-img-top img-fluid";
     img.src = obj.image; //src from an object from array
     img.alt = `Picture of: ${obj.title}`; // src from an object from array
 
@@ -123,7 +128,7 @@ const displayCards = (obj) => {
     cartBtn.className = "btn btn-primary";
     cartBtn.textContent = "Add to Cart";
     cartBtn.onclick = () => {
-      // console.log(obj.title);
+
       let cartItem = {
         id: obj.id,
         title: obj.title,
@@ -131,9 +136,11 @@ const displayCards = (obj) => {
         quantity: 1,
       };
       submitToCart(cartItem);
-      console.log(`attempt to buy ${obj.title}`)
-      
     };
+
+    cardFoot.className = "card-footer";
+    cardFootText.className = "text-muted"
+    cardFootText.textContent = "Exclusively at The Store"
 
     //* Attach
     accHead1.appendChild(accBtn1);
@@ -148,55 +155,98 @@ const displayCards = (obj) => {
     accordion.appendChild(accItem1);
     accordion.appendChild(accItem2);
     body.appendChild(title);
-   
+    cardFoot.appendChild(cardFootText);
+
     col.appendChild(card);
     col.appendChild(img);
     col.appendChild(body);
     col.appendChild(accordion);
+    col.appendChild(cardFoot);
 
     display.appendChild(col);
   });
 };
 
 function submitToCart(item) {
- 
-// cart.length > 0 ?
-// cart.forEach(object => {
-//   if (object.id === item.id) {
-//     object.quantity = object.quantity + 1
-//   } else {
-//     cart.push(item)
-//   }
-// }): cart.push(item)
-// console.log(cart)
 
-  // if (cart.length > 0) {
-   
-const cartItem = cart.find((cartItem) => cartItem.id === item.id);
-// const found = array1.find(element => element > 10);
-
-    if (cartItem) {
-      console.log(cartItem.quantity)
-    cartItem.quantity ++;
-    console.log("quantity add")
-    console.log(cart)
-
-       
-    } else { 
-    cart.push(item);
-    console.log(`${item.title} added to cart`);
-    console.log(cart)
-    }
-  };
-   
- 
-// }
-
-
-
-navBarCart.addEventListener("submit", (event) => {
-  event.preventDefault();
+  const cartItem = cart.find((cartItem) => cartItem.id === item.id);
   
+  if (cartItem) {
+    cartItem.quantity++;
+  } else {
+    cart.push(item);
+  }
+}
+
+const displayCart = function () {
+  subtotal = 0;
+  grandTotal = 0;
+  removeElements(cartBody);
+  cart.map((obj) => {
+
+    //create
+    let tableRow = document.createElement("tr");
+    let tableQty = document.createElement("td");
+    let tableTitle = document.createElement("td");
+    let tableCost = document.createElement("td");
+
+    //attributes
+    tableRow.className = "tableRow";
+    tableQty.className = "qty";
+    tableQty.textContent = `${obj.quantity}`;
+    tableTitle.className = "title";
+    tableTitle.textContent = `${obj.title}`;
+    tableCost.className = "cost";
+    tableCost.textContent = `$${(Math.floor(obj.cost * 100) / 100).toFixed(
+      2
+    )} ea`;
+
+    //append
+    tableRow.appendChild(tableQty);
+    tableRow.appendChild(tableTitle);
+    tableRow.appendChild(tableCost);
+
+    cartBody.appendChild(tableRow);
+    log(subtotal);
+    log(obj.cost);
+    subtotal = subtotal + (obj.cost * obj.quantity * 100) / 100;
+    log(subtotal);
+    log(obj.cost);
+    log(obj.quantity);
+  });
+
+  grandTotal = (
+    (subtotal * 100) / 100 +
+    (subtotal * salesTax * 100) / 100 +
+    (subtotal * shipUpcharge * 100) / 100
+  ).toFixed(2);
+  subtotalCost.textContent = `$${subtotal}`;
+  taxCost.textContent = `$${(
+    ((Math.floor(subtotal * 100) / 100) * Math.floor(salesTax * 100)) /
+    100
+  ).toFixed(2)}`;
+  shipCost.textContent = `$${(
+    ((Math.floor(subtotal * 100) / 100) * Math.floor(shipUpcharge * 100)) /
+    100
+  ).toFixed(2)}`;
+  totalCost.textContent = `$${grandTotal}`;
+  purchaseBtn.textContent = `Purchase for $${grandTotal}`;
+};
+
+const clearCartFunc = function () {
+  cart = [];
+  removeElements(cartBody);
+  subtotal = 0;
+  grandTotal = 0;
+  subtotalCost.textContent = "$0.00";
+  taxCost.textContent = "$0.00";
+  shipCost.textContent = "$0.00";
+  totalCost.textContent = "$0.00";
+  purchaseBtn.textContent = "Empty Cart";
+};
+
+navBarCart.addEventListener("click", (event) => {
+  displayCart();
 });
 
 navBarElectro.addEventListener("click", (event) => {
@@ -217,6 +267,15 @@ navBarMenz.addEventListener("click", (event) => {
 navBarWomenz.addEventListener("click", (event) => {
   products = [];
   fakeStore("/products/category/women's clothing?limit=5");
+});
+
+purchaseBtn.addEventListener("click", (event) => {
+  alert("Thank you for your Purchase!");
+  clearCartFunc();
+});
+
+clearCart.addEventListener("click", (event) => {
+  clearCartFunc();
 });
 
 window.onload = fakeStore("/products?sort=asc&limit=8");
